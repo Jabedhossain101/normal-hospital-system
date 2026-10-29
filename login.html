@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login</title><link rel="stylesheet" href="css/style.css"></head>
+<body><div class="center"><form class="box" id="f"><h2>Log in</h2><div class="badge" id="rb"></div>
+<label>Email<input name="email" type="email" required></label>
+<label>Password<input name="password" type="password" required></label>
+<div class="msg" id="m"></div><button class="btn">Log in</button>
+<p class="alt">New here? <a id="rl" href="#">Register</a> · <a href="index.html">Change role</a></p></form></div>
+<script src="js/app.js"></script><script>
+const role=getRole();$('#rb').textContent=role;$('#rl').href='register.html?role='+role;
+if(location.search.includes('registered')){$('#m').className='msg ok';$('#m').textContent='Registration complete. Please log in.'}
+$('#f').onsubmit=e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+const u=users().find(x=>x.email===d.email.toLowerCase()&&x.password===d.password&&x.role===role);
+$('#m').className='msg';
+if(!u)return $('#m').textContent='Wrong email/password, or this account is not a '+role+' account.';
+if(u.active===false)return $('#m').textContent='This account has been deactivated. Contact the admin.';
+localStorage.setItem('hms_session',JSON.stringify({email:u.email,name:u.name,role:u.role}));addLog(u.email,'Logged in');
+location.href=role+'.html'}
+</script></body></html>

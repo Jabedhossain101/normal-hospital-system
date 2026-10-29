@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Register</title><link rel="stylesheet" href="css/style.css"></head>
+<body><div class="center"><form class="box" id="f"><h2>Register</h2><div class="badge" id="rb"></div>
+<label>Full name<input name="name" required></label>
+<label>Email<input name="email" type="email" required></label>
+<label>Phone<input name="phone" required></label>
+<label>Password<input name="password" type="password" minlength="6" required></label>
+<label>Confirm password<input name="cpass" type="password" required></label>
+<div class="msg" id="m"></div><button class="btn">Create account</button>
+<p class="alt">Already registered? <a id="ll" href="#">Log in</a> · <a href="index.html">Change role</a></p></form></div>
+<script src="js/app.js"></script><script>
+const role=getRole();$('#rb').textContent=role;$('#ll').href='login.html?role='+role;
+$('#f').onsubmit=e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+if(d.password!==d.cpass)return $('#m').textContent='Passwords do not match.';
+const u=users();if(u.some(x=>x.email===d.email.toLowerCase()&&x.role===role))return $('#m').textContent='This email is already registered for this role.';
+delete d.cpass;d.email=d.email.toLowerCase();d.role=role;d.active=true;u.push(d);saveUsers(u);addLog(d.email,'Registered as '+role);
+location.href='login.html?role='+role+'&registered=1'}
+</script></body></html>
